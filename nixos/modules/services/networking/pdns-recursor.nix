@@ -58,6 +58,14 @@ in {
       '';
     };
 
+    api.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Should the Webserver be enabled ? See <https://doc.powerdns.com/recursor/http-api/index.html> for more details.
+      '';
+    };
+
     api.address = mkOption {
       type = types.str;
       default = "0.0.0.0";
@@ -155,6 +163,14 @@ in {
         <https://doc.powerdns.com/recursor/lua-config/index.html>.
       '';
     };
+
+    openFirewall = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Open the firewall port(s).
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -166,6 +182,7 @@ in {
       local-port    = cfg.dns.port;
       allow-from    = cfg.dns.allowFrom;
 
+      webserver            = cfg.api.enable;
       webserver-address    = cfg.api.address;
       webserver-port       = cfg.api.port;
       webserver-allow-from = cfg.api.allowFrom;
@@ -201,6 +218,13 @@ in {
 
     users.groups.pdns-recursor = {};
 
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [
+      cfg.dns.port
+    ] ++ lib.optional cfg.api.enable cfg.api.port;
+
+    networking.firewall.allowedUDPPorts = lib.mkIf cfg.openFirewall [
+      cfg.dns.port
+    ];
   };
 
   imports = [
