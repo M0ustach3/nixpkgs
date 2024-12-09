@@ -8,11 +8,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "pdns-recursor";
-  version = "5.1.2";
+  version = "5.1.3";
 
   src = fetchurl {
     url = "https://downloads.powerdns.com/releases/pdns-recursor-${finalAttrs.version}.tar.bz2";
-    hash = "sha256-s6N+uyAoWrmsu7DhNw5iO7OY7TCH8OZ48j/6OwBjmD0=";
+    hash = "sha256-w07jH1Itk5l+BKsu0PtY3mVpwT7SossNNxzvSaWFNWo=";
   };
 
   cargoDeps = rustPlatform.fetchCargoTarball {
